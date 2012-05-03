@@ -69,8 +69,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ReliableBrokeredMessage.cs" />
+    <Compile Include="ReliableClientBase.cs" />
     <Compile Include="ReliableQueueClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReliableSubscriptionClient.cs" />
+    <Compile Include="ReliableTopicClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -9,20 +9,11 @@ using Microsoft.Practices.TransientFaultHandling;
 
 namespace ReliableServiceBusClients
 {
-    public class ReliableQueueClient : IDisposable
+    public class ReliableQueueClient : ReliableClientBase, IDisposable
     {
         private QueueClient mQueueClient;
-        private RetryPolicy<ServiceBusTransientErrorDetectionStrategy> mRetryPolicy;
-        private NamespaceManager mNamespaceManager;
-        private MessagingFactory mMessagingFactory;
-        public ReliableQueueClient(string sbNamespace, TokenProvider tokenProvider, string path, ReceiveMode receiveMode, RetryPolicy<ServiceBusTransientErrorDetectionStrategy> policy)
+        public ReliableQueueClient(string sbNamespace, TokenProvider tokenProvider, string path, ReceiveMode receiveMode, RetryPolicy<ServiceBusTransientErrorDetectionStrategy> policy):base(sbNamespace, tokenProvider,path,policy)
         {
-            mRetryPolicy = policy;
-            Uri address = ServiceBusEnvironment.CreateServiceUri("sb", sbNamespace, string.Empty);
-            mNamespaceManager = new NamespaceManager(address, tokenProvider);
-            mMessagingFactory = MessagingFactory.Create(address, tokenProvider);
-
-            mNamespaceManager.DeleteQueue(path);
             //create the queue if it doesn't exist
             bool needsCreation = false;
             try
@@ -44,7 +35,7 @@ namespace ReliableServiceBusClients
                     //ignore this exception because queue already exists
                 }
             }
-            mRetryPolicy.ExecuteAction(() => mQueueClient = mMessagingFactory.CreateQueueClient(path, receiveMode));
+            mRetryPolicy.ExecuteAction(() => mQueueClient = mMessagingFactory.CreateQueueClient(path, receiveMode));   
         }
         public ReliableQueueClient(string sbNamespace, TokenProvider tokenProvider, string path, RetryPolicy<ServiceBusTransientErrorDetectionStrategy> policy)
             : this(sbNamespace, tokenProvider, path, ReceiveMode.PeekLock, policy)
