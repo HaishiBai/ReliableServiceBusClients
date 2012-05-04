@@ -14,12 +14,10 @@ namespace HelloWorld
         static void Main(string[] args)
         {
             string owner = "owner";
-            string secretkey = "s5Aqwx2dr6CnjJ3PK13Liq6MsTPG8m6HKgg1/MLdfUI=";
-            //Use ReliableQueueClient
-            //using (ReliableQueueClient client = new ReliableQueueClient("{YOUR SB NAMESPACE}", 
-            //                                                            TokenProvider.CreateSharedSecretTokenProvider("{YOUR SECRET", "{YOUR SECRET KEY}"),
-            //                                                            "testqueue"))
-            using (ReliableQueueClient client = new ReliableQueueClient("hbai01",
+            string secretkey = "{YOUR KEY}";
+            string nameSpace = "hbai01";
+
+            using (ReliableQueueClient client = new ReliableQueueClient(nameSpace,
                                                                         TokenProvider.CreateSharedSecretTokenProvider(owner, secretkey),
                                                                         "testqueue"))
             {
@@ -72,10 +70,10 @@ namespace HelloWorld
             Console.Write("Press [Enter] to test pub/sub:");
             Console.ReadLine();
 
-            ReliableTopicClient topicClient = new ReliableTopicClient("hbai01",
+            ReliableTopicClient topicClient = new ReliableTopicClient(nameSpace,
                                                                         TokenProvider.CreateSharedSecretTokenProvider(owner, secretkey),
                                                                         "testtopic");
-            ReliableSubscriptionClient subscriptionClient = new ReliableSubscriptionClient("hbai01",
+            ReliableSubscriptionClient subscriptionClient = new ReliableSubscriptionClient(nameSpace,
                                                                         TokenProvider.CreateSharedSecretTokenProvider(owner, secretkey),
                                                                         "testtopic", "testsubscription");
             topicClient.Send("Broadcasting message");
